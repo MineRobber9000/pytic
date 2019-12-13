@@ -62,7 +62,9 @@ class Block:
 		reserved_byte = fp.read(1) # unused byte AFAICT
 		values = bytearray(fp.read(size))
 		cls = Blocks.get(block_type,self)
-		return cls(bank,values)
+		ret = cls(bank,values)
+		ret.block_id = block_type
+		return ret
 	def save_to(self,fp):
 		"""Saves block to file pointer."""
 		# bank and chunk type
