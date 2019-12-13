@@ -124,3 +124,28 @@ class CodeBlock(Block):
 	content = property(_get_content,_set_content,lambda x: None,Block._get_content.__doc__)
 
 Blocks[5]=CodeBlock
+
+class SFXBlock(Block):
+	ID = 9
+	# TODO: actually implement changing and creating SFX
+
+Blocks[9] = SFXBlock
+
+class WaveformsBlock(Block):
+	ID = 10
+	# TODO: actually implement changing and creating waveforms
+
+Blocks[10] = WaveformsBlock
+
+class PaletteBlock(Block):
+	ID = 12
+	def _split(self,s):
+		for i in range(0,len(self.values),s):
+			yield list(self.values[i:i+s])
+	def _get_content(self):
+		return list(self._split(3))
+	def _set_content(self,v):
+		self.values = bytearray(sum(v,[]))
+	content = property(_get_content,_set_content,lambda x: None,Block._get_content.__doc__)
+
+Blocks[12]=PaletteBlock
