@@ -76,7 +76,44 @@ class Block:
 		# write chunk data
 		fp.write(self.values)
 
+class GraphicsBlock(Block):
+	def _parse_row(self,offset):
+		row = []
+		for pixel_byte in self.values[offset:offset+4]:
+			row.extend([pixel_byte & 0xF,pixel_byte >> 4])
+		return row, offset+4
+	def _parse_sprite(self,offset):
+		pixels = []
+		for i in range(8):
+			row, offset = self._parse_row(offset)
+			pixels.append(row)
+		return pixels, offset
+	def _parse_content(self):
+		sprites = []
+		offset = 0
+		while offset<len(self.values):
+			sprite, offset = self._parse_sprite(offset)
+			sprites.append(sprite)
+		return sprites
+	def _get_content(self):
+		return self._parse_content()
+	def _set_content(self,v):
+		values = bytearray()
+		for sprite in v:
+			for row in sprite:
+				for i in range(0,len(row),2):
+					values.append((row[i+1]<<4) | (row[i]))
+		self.values = values
+	content = property(_get_content,_set_content,lambda x: None,Block._get_content.__doc__)
 
+class TileBlock(GraphicsBlock):
+	ID = 1
+
+class SpriteBlock(GraphicsBlock):
+	ID = 2
+
+Blocks[1]=TileBlock
+Blocks[2]=SpriteBlock
 
 class CodeBlock(Block):
 	ID = 5
