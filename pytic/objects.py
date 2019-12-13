@@ -7,7 +7,7 @@ class TICFile:
 		self.blocks = []
 	def add_block(self,block):
 		"""Adds Block `block`."""
-		self.blocks.add(block)
+		self.blocks.append(block)
 	def save_to(self,fp):
 		"""Saves TICFile. If `fp` is a file name, it is converted to a file pointer."""
 		responsible = False
@@ -19,12 +19,16 @@ class TICFile:
 		if responsible:
 			fp.close()
 	@classmethod
+	def from_file(cls,fn):
+		with open(fn,"rb") as f:
+			return cls.from_fp(f)
+	@classmethod
 	def from_fp(cls,fp):
 		"""Creates TICFile from a binary read filepointer."""
 		self = cls()
 		size = fp.seek(0,2)
 		fp.seek(0)
-		while (fp.tell()<=size):
+		while (fp.tell()<size):
 			self.add_block(Block.from_fp(fp))
 		return self
 
@@ -50,8 +54,9 @@ class Block:
 	@classmethod
 	def from_fp(self,fp):
 		global Blocks
-		header0 = ord(fp.read(1))
+		header0 = fp.read(1)
 		if not header0: return None
+		header0 = ord(header0)
 		bank, block_type = (header0>>5), (header0 & 0b11111)
 		size = struct.unpack("<H",fp.read(2))[0]
 		reserved_byte = fp.read(1) # unused byte AFAICT
@@ -68,6 +73,8 @@ class Block:
 		fp.write(bytearray([0]))
 		# write chunk data
 		fp.write(self.values)
+
+
 
 class CodeBlock(Block):
 	ID = 5
