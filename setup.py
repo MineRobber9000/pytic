@@ -11,7 +11,7 @@ with open(os.path.join(here, 'README.md')) as f:
 REQUIREMENTS = []
 
 setup(
-    name='pytic',
+    name='pytic80',
     version='0.0.1',
     description='Python library for reading .tic files',
     long_description=README,
