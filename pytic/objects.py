@@ -68,7 +68,7 @@ class Block:
 	def save_to(self,fp):
 		"""Saves block to file pointer."""
 		# bank and chunk type
-		fp.write(bytearray([((self.bank<<5)+(self.__class__.ID))]))
+		fp.write(bytearray([((self.bank<<5)+(self.block_id if hasattr(self,"block_id") else self.__class__.ID))]))
 		# chunk size
 		fp.write(struct.pack("<H",self.size))
 		# write 0 to the unused byte
@@ -115,6 +115,12 @@ class SpriteBlock(GraphicsBlock):
 Blocks[1]=TileBlock
 Blocks[2]=SpriteBlock
 
+class MapBlock(Block):
+	ID = 4
+	# TODO: Implement changing the map
+
+Blocks[4]=MapBlock
+
 class CodeBlock(Block):
 	ID = 5
 	def _get_content(self):
@@ -124,6 +130,12 @@ class CodeBlock(Block):
 	content = property(_get_content,_set_content,lambda x: None,Block._get_content.__doc__)
 
 Blocks[5]=CodeBlock
+
+class FlagsBlock(Block):
+	ID = 6
+	# TODO: Implement changing the flags
+
+Blocks[6]=FlagsBlock
 
 class SFXBlock(Block):
 	ID = 9
