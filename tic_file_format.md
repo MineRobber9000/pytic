@@ -52,10 +52,16 @@ This represents the sound wavetable data. This is copied to `0x0FFE4`...`0x100E3
 ## 12 (`0x0C`) - Palette
 This represents the palette data. This is copied to `0x3FC0`...`0x3FEF` on cart boot. Prior to 0.70.6, the bank bits were ignored and the palette was used across all graphics/map banks. In 0.70.6 and above, each bank gets its own palette.
 
-## 13 (`0x0D`) - Music Patterns
-This represents the music pattern data. This is copied to `0x11164`...`0x13E63`.
+## 13 (`0x0D`) - Music Patterns (pre-0.80)
+This represents the music pattern data. This is copied to `0x11164`...`0x13E63`. This music pattern format is deprecated, and is automatically converted to the new format (type 15 (`0x0F`)).
 
 ## 14 (`0x0E`) - Music Tracks
 This represents the music track data. This is copied to `0x13E64`...`0x13FFB`.
 
-Any chunk type not described above doesn't have any useful purpose, as of the time of writing.
+## 15 (`0x0F`) - Music Patterns (0.80+)
+This represents the music pattern data. This is copied to `0x11164`...`0x13E63`. This is a new variation with support for effect commands.
+
+## 16 (`0x10`) - ZLIB Compressed Code (0.80)
+This represents the code, but compressed. If the code editor goes beyond the 64K chunk limit, TIC-80 will compress the code down as long as the compressed result never goes above 64K. The bank bits seem to be ignored.
+
+Any chunk type not described above is reserved for future use and should likely be avoided.
