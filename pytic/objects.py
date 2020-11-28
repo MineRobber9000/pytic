@@ -118,6 +118,14 @@ Blocks[2]=SpriteBlock
 class MapBlock(Block):
 	ID = 4
 	# TODO: Implement changing the map
+	def _get_content(self):
+		out = []
+		for i in range(0,len(self.values),136):
+			out.append(self.values[i:i+136])
+		return out
+	def _set_content(self,v):
+		base = [(x+[0 for i in range(136)])[:136] for x in v]
+		self.values = bytearray(([x for l in base for x in l]+[0 for i in range(240*136)])[:240*136])
 
 Blocks[4]=MapBlock
 
