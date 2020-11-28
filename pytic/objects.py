@@ -126,6 +126,7 @@ class MapBlock(Block):
 	def _set_content(self,v):
 		base = [(x+[0 for i in range(136)])[:136] for x in v]
 		self.values = bytearray(([x for l in base for x in l]+[0 for i in range(240*136)])[:240*136])
+	content = property(_get_content,_set_content,lambda x: None,Block._get_content.__doc__)
 
 Blocks[4]=MapBlock
 
